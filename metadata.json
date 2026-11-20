@@ -1,0 +1,6 @@
+{
+  "name": "PPSSPP eFootball 26 Emülatör",
+  "description": "Özelleştirilebilir şut, pas, orta açma ve fonksiyon/ara pas tuş atamalı PPSSPP tarzı PSP emülatörü ve oynanabilir eFootball 26 futbol deneyimi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
