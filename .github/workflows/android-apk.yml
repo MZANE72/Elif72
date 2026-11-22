@@ -1,0 +1,59 @@
+name: Test APK Olustur
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Projeyi indir
+        uses: actions/checkout@v4
+
+      - name: Node kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Java kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Android SDK hazirla
+        uses: android-actions/setup-android@v3
+
+      - name: Bagimliliklari kur
+        run: npm install
+
+      - name: Capacitor kur
+        run: npm install @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7
+
+      - name: Web uygulamasini derle
+        run: npm run build
+
+      - name: Android projesi olustur
+        run: |
+          npx cap init "Futbol Kontrol" "com.elif72.futbolkontrol" --web-dir dist
+          npx cap add android
+          npx cap sync android
+
+      - name: Test APK derle
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: APK dosyasini sakla
+        uses: actions/upload-artifact@v4
+        with:
+          name: futbol-kontrol-test-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
